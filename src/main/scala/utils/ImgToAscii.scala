@@ -1,4 +1,6 @@
-package utils
+package utils         //comment me out to run scala script, uncomment me to use in project
+//runs fine in IntelliJ terminal. Mac Os High Sierra's terminal does not seem to support custom colors
+//TODO rgb to xterm (256 color) converter using vector 3 distance https://jonasjacek.github.io/colors/
 
 import java.awt.{Color, Image}
 import java.awt.image.BufferedImage
@@ -99,7 +101,7 @@ object ImgToAscii {
     userCheck(Try(StdIn.readLine("Type a width (0-255):").toInt).toOption)
   }
 
-  def printImg(path : String, width : Int): Unit = {
+  def printImg(path : String, width : Int, useChar : Boolean = false, char : String = "\u2588"): Unit = {
     /** Try to load an image */
     def image(path : String, width : Int) : Option[Image] = {
       Try {
@@ -115,14 +117,14 @@ object ImgToAscii {
     val myImage : Option[Image] = image(path, width)
 
     if(myImage.isDefined) {
-      imgToAscii(myImage.get)
+      imgToAscii(myImage.get, useChar, char)
     } else {
       println("Couldn't load image... Sorry!")
     }
   }
 
   /** Convert an Image to Ascii art in the console */
-  def imgToAscii(image: Image): Unit = {
+  def imgToAscii(image: Image, useChar : Boolean = false, char : String = "\u2588"): Unit = {
     println"Trying to render your image..."
     val img = new BufferedImage(image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_INT_RGB)
     img.getGraphics.drawImage(image, 0, 0 , null)
@@ -133,7 +135,10 @@ object ImgToAscii {
         val r     = col.getRed
         val g     = col.getGreen
         val b     = col.getBlue
-        print"${COLOR_B(r, g, b)} "
+        if (useChar)
+          print"${COLOR(r, g, b)}$char"
+        else
+          print"${COLOR_B(r, g, b)} "
       }
       print("\n")
     }
