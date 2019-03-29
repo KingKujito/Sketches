@@ -1,5 +1,7 @@
 package SingularSketches
 
+import utils.InjectionProtection
+
 /**A String interpolator which allows for safe SQL queries.
   *
   * This is merely a proof of concept. If you'd like a prepared query and a parameter list, use scalikejdbc's interpolator:

@@ -1,7 +1,6 @@
-package SingularSketches
+package utils
 
 import scala.io.StdIn
-import scala.language.implicitConversions
 
 object InjectionProtection {
   /**Removes all illegal characters for a string which will be used in a SQL query.
@@ -101,6 +100,3 @@ object InjectionProtection {
   }
 
 }
-
-
-

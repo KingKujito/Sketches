@@ -2,6 +2,7 @@ package SingularSketches
 
 //import oriented._
 import oriented.syntax._
+import utils.InjectionProtection
 
 /**A String interpolator which allows for safe SQL queries.
   *
