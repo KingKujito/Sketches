@@ -2,6 +2,8 @@ package controllers
 
 import mapScroller.MapApp
 import mover.MoverApp
+import utils.ImgToAscii
+import utils.Mail
 
 import scala.io.StdIn
 
@@ -28,6 +30,11 @@ object CoolApp extends MyApp {
         ))
       case "mover"      =>
         MoverApp.customLoop(0)
+      case "imgtoascii" =>
+        ImgToAscii.main(Array.empty)
+      case "prankmailer" =>
+        Mail.mail("Funny mail", "asdghfjkl")
+        quit
       case _ => quit
     }
   }
@@ -38,9 +45,13 @@ object CoolApp extends MyApp {
         |Select your app:
         |-'mapscroller'
         |-'mover'
+        |-'ImgToAscii'
+        |-'PrankMailer'
       """.stripMargin) match {
-      case x : String if x.toLowerCase == "mapscroller" => x.toLowerCase
-      case x : String if x.toLowerCase == "mover"       => x.toLowerCase
+      case x : String if x.toLowerCase == "mapscroller" ||
+                         x.toLowerCase == "mover"       ||
+                         x.toLowerCase == "imgtoascii"  ||
+                         x.toLowerCase == "prankmailer" => x.toLowerCase
       case x => println(s"Could not load app '$x'"); selectApp
     }
   }

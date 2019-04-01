@@ -1,6 +1,5 @@
 package SingularSketches
 
-//import oriented._
 import oriented.syntax._
 import utils.InjectionProtection
 
