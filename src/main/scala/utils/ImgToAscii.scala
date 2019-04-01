@@ -1,4 +1,4 @@
-//package utils         //comment me out to run scala script, uncomment me to use in project
+package utils         //comment me out to run scala script, uncomment me to use in project
 //runs fine in IntelliJ terminal. Mac Os High Sierra's terminal does not seem to support custom colors. Set use256 to true for them.
 
 import java.awt.{Color, Image}
@@ -11,7 +11,7 @@ import scala.util.Try
 
 object ImgToAscii {
 
-  val heightMult : Float     = 0.3f   //determines how squished or streched the image looks.
+  val heightMult : Float     = 0.5f   //determines how squished or streched the image looks. 0.5 for mac terminal, 0.3 for intellij terminal
   val _8bit      : Boolean   = true
 
   /**Ansi codes for Console output.
@@ -442,7 +442,7 @@ object ImgToAscii {
     val myWidth : Int     = testWidth()
     val imgPath : String  = StdIn.readLine("Paste an image file path:")
 
-    printImg(imgPath, myWidth, use256 = _8bit)
+    printImg(imgPath, myWidth, useChar = true, char="\u272e", use256 = _8bit)
 
   }
 

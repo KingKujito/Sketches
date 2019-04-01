@@ -62,9 +62,6 @@ object SafeOrientSqlQuery {
 
   //construct scala-oriented SQLStatement like this:
   //                          SQLStatement(sSql"my statement")
-  //or
-  //                          SQLStatement(autoSql"my statement")
-  //see: http://itsmeijers.com/docs/scala-oriented/#oriented.syntax.SQLStatement
 
 
 /*RESULTS FROM RUNNING main() with notes
