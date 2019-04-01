@@ -1,5 +1,6 @@
 package utils         //comment me out to run scala script, uncomment me to use in project
 //runs fine in IntelliJ terminal. Mac Os High Sierra's terminal does not seem to support custom colors. Set use256 to true for them.
+//for example images see: https://github.com/KingKujito/Sketches/tree/master/files/pdf/ImgToAscii.pdf
 
 import java.awt.{Color, Image}
 import java.awt.image.BufferedImage
