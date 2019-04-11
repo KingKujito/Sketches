@@ -56,7 +56,7 @@ object ScanForValues {
     }
     StdIn.readLine("\n':quit' to quit\nType path of dir to scan:\n") match {
       case ":quit"|":q"   => ()
-      case s              => scanDir(s, "txt|scala").foreach(f => println(s"${Console.RED}$f${Console.RESET}")); main(args)
+      case s              => scanDirDeep(s, "txt|scala").foreach(f => println(s"${Console.RED}$f${Console.RESET}")); main(args)
     }
   }
 
@@ -107,13 +107,37 @@ object ScanForValues {
   }
 
   /**
+    * Scan each file in a directory and subdirectories for suspicious patterns.
+    *
+    * @param path       Absolute path to top-most directory.
+    * @param fileTypes  Regex pattern for file types which should be scanned. Examples: "txt", "txt|scala|js|java" or "cs|css|htm|html|js|java|scala".
+    * @return           List with every suspicious file path.
+    */
+  def scanDirDeep(path : String, fileTypes : String): List[String] = {
+    val all   = getListOfFiles(path)
+    val dirs  = all.filter(_.isDirectory)
+    val files = all.filter(file =>
+      file.isFile && file.canRead && file.getName.matches(s".*\\.($fileTypes)"))
+
+    val buff = ListBuffer.empty[String]
+
+    files.foreach{f =>
+      val path = f.getPath
+      if(scanFile(path).nonEmpty) buff += path
+    }
+    dirs.foreach(d => scanDirDeep(d.getAbsolutePath, fileTypes).foreach(f => buff += f))
+
+    buff.toList
+  }
+
+  /**
     * @param dir   Absolute path to directory.
     * @return      All files within a directory.
     */
   def getListOfFiles(dir: String):List[File] = {
     val d = new File(dir)
     if (d.exists && d.isDirectory) {
-      d.listFiles.filter(_.isFile).toList
+      d.listFiles.toList
     } else {
       List[File]()
     }
