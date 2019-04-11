@@ -7,6 +7,7 @@ package utils         //comment me out to run scala script, uncomment me to use 
 import java.awt.{Color, Image}
 import java.awt.image.BufferedImage
 import java.io.File
+import java.net.URL
 
 import javax.imageio.ImageIO
 
@@ -440,7 +441,7 @@ object ImgToAscii {
     def image(path : String, width : Int) : Option[Image] = {
       Try {
         println"Trying to load your image..."
-        val img                 = ImageIO.read(new File(path))
+        val img                 = try ImageIO.read(new URL(path)) catch { case _: Exception => ImageIO.read(new File(path)) }
         println"Found image with w=${img.getWidth} and h=${img.getHeight}..."
         val newHeight           = ((width.toFloat / img.getWidth.toFloat) * img.getHeight.toFloat)*heightMult
         println"Trying to resize your image to w=$width h=${newHeight.toInt}..."

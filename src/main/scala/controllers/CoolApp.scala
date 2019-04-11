@@ -33,7 +33,7 @@ object CoolApp extends MyApp {
       case "imgtoascii" =>
         ImgToAscii.main(Array.empty)
       case "prankmailer" =>
-        Mail.mail("Funny mail", "asdghfjkl")
+        PrankMailer.loop()
         quit
       case _ => quit
     }

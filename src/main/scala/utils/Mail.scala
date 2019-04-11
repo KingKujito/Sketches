@@ -23,8 +23,8 @@ object Mail {
 
   def init() {
     username
-    receivers
     password
+    receivers
   }
 
   def mail(subject : String, content: String, richMessage: Option[String] = None) {
@@ -32,10 +32,11 @@ object Mail {
       from    = username -> "Anon",
       to      = receivers,
       subject = subject,
-      message = content
+      message = content,
+      richMessage = richMessage
     )) match {
-      case Success(_) => println(s"${LocalDateTime.now} - Your mail, '$subject', got sent to $receivers!")
-      case Failure(_) => println("username - password, are not correct. If you're using gmail, visit: https://myaccount.google.com/lesssecureapps \nPlease close the app and try again.")
+      case Success(_) => println(s"${Console.GREEN}${LocalDateTime.now} - Your mail, '$subject', got sent to $receivers!${Console.RESET}")
+      case Failure(_) => println(s"${Console.RED}username - password, are not correct. If you're using gmail, visit: https://myaccount.google.com/lesssecureapps \nPlease close the app and try again.${Console.RESET}")
     }
   }
 
