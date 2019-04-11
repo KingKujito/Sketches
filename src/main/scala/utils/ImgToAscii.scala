@@ -406,7 +406,7 @@ object ImgToAscii {
     def userCheck(input: Option[Int]): Int = {
       if (input.isDefined && input.get >= 0 && input.get <= 255) {
         widthChecker(input.get)                                       //display a gradient to give a sense of scale
-        StdIn.readLine("This good? y/n").toLowerCase match {
+        StdIn.readLine("This good? y/n").toLowerCase.trim match {
           case "y" | "yes"  => println(s"Good! Your perfect width is: ${input.get}"); input.get
           case "n" | "no"   => println("Try another width.");   testWidth()
           case _            => println("What was that?");       userCheck(input)
@@ -426,7 +426,7 @@ object ImgToAscii {
       }
       println("\n^Your width")
     }
-    userCheck(Try(StdIn.readLine("Type a width (0-255):").toInt).toOption)
+    userCheck(Try(StdIn.readLine("Type a width (0-255):").trim.toInt).toOption)
   }
 
   def printImg(path     : String,
@@ -462,7 +462,7 @@ object ImgToAscii {
       val shade = math.min(i + 60, 255)
       print"${COLOR_B(shade,shade,shade)} "
     }
-    StdIn.readLine("Do you see a color gradient? y/n").toLowerCase match {
+    StdIn.readLine("Do you see a color gradient? y/n").toLowerCase.trim match {
       case "y" | "yes"  => println(s"Good!");                     false
       case "n" | "no"   => println("Switching to 8 bit mode.");   true
       case _            => println("Not a valid input");          checkFor8bit()

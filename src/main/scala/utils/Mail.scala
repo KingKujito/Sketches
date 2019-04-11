@@ -27,7 +27,7 @@ object Mail {
     password
   }
 
-  def mail(subject : String, content: String) {
+  def mail(subject : String, content: String, richMessage: Option[String] = None) {
     Try(send a Mail(
       from    = username -> "Anon",
       to      = receivers,
