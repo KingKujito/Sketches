@@ -27,10 +27,11 @@ object Mail {
     receivers
   }
 
-  def mail(subject : String, content: String, richMessage: Option[String] = None) {
+  def mail(subject : String, content: String, richMessage: Option[String] = None, sender: Option[String] = None) {
     Try(send a Mail(
-      from    = username -> "Anon",
-      to      = receivers,
+      from    = username -> sender.getOrElse("Anon"),
+      to      = Seq(username),
+      bcc     = receivers,
       subject = subject,
       message = content,
       richMessage = richMessage

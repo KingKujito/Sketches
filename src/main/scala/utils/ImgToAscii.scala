@@ -34,7 +34,7 @@ object ImgToAscii {
   val heightMult : Float     =
     printType match {
       case EmojiT  => 0.75f
-      case HtmlT   => 0.6f
+      case HtmlT   => 0.3f
       case _       => if(_8bit) 0.5f else 0.3f
     }
 
