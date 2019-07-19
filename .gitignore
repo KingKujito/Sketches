@@ -1,3 +1,6 @@
+#custom
+emoji_data/
+
 #scala
 *.class
 *.log

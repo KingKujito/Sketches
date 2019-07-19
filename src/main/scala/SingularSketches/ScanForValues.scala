@@ -43,14 +43,17 @@ import scala.collection.mutable.ListBuffer
 object ScanForValues {
   //regex for finding interpolated query values:                             .*=[\t\n\r ]*\$.*
   //regex for finding interpolated query values with interpolator:           .*(s|sql|sqlTask)"+.*=[\t\n\r ]*\$.*"+.*
-  val valWithInterp = ".*(s|sql|sqlTask)\"+.*=[\\t\\n\\r ]*\\$.*\"+.*"
+  val valWithInterp     = ".*(s|sql|sqlTask)\"+.*=[\\t\\n\\r ]*\\$.*\"+.*"
   //regex for finding interpolated query values with
   // interpolator and proper parameterization:                               .*(s|sql|sqlTask)"+.*=[\t\n\r ]*\$\{.*QVal[\t\n\r ]*\(.*\).*\}.*"+.*
-  val qvalWithInterp = ".*(s|sql|sqlTask)\"+.*=[\\t\\n\\r ]*\\$\\{.*QVal[\\t\\n\\r ]*\\(.*\\).*\\}.*\"+.*"
+  val qvalWithInterp    = ".*(s|sql|sqlTask)\"+.*=[\\t\\n\\r ]*\\$\\{.*QVal[\\t\\n\\r ]*\\(.*\\).*\\}.*\"+.*"
   //note: strings without interpolator can be disregarded due to the $ being a string literal in thia case
 
-  val luceneVal      = """.*(LUCENE|lucene|Lucene)[ \t\n\r]*\(?'?\$.+'?\)?.*"""
-  val luceneQVal     = """.*(LUCENE|lucene|Lucene)[ \t\n\r]*\(?'?\$\{[ \t\n\r]*QVal[ \t\n\r]*(.+)[ \t\n\r]*\}[ \t\n\r]*'?\)?.*"""
+  val luceneVal         = """.*(LUCENE|lucene|Lucene)[ \t\n\r]*\(?'?\$.+'?\)?.*"""
+  val luceneQVal        = """.*(LUCENE|lucene|Lucene)[ \t\n\r]*\(?'?\$\{[ \t\n\r]*QVal[ \t\n\r]*(.+)[ \t\n\r]*\}[ \t\n\r]*'?\)?.*"""
+
+  val quoteVal          = """.*(s|sql|sqlTask)"+.*=[\t\n\r ]*'[\t\n\r ]*\$.*'[\t\n\r ]*"+.*"""
+  val whereWithString   = """.*WHERE[\t\r\n ]*.*[\t\r\n ]*=[\t\r\n ]*'.*'.*"""
 
   def main(args: Array[String]): Unit = {
     StdIn.readLine("\n':quit' to quit\nType line to check for suspicious values:\n") match {
@@ -64,14 +67,15 @@ object ScanForValues {
   }
 
   def isSuspicious(query : String): Boolean = {
-    (query matches valWithInterp) && !(query matches qvalWithInterp) ||
-    (query matches luceneVal)     && !(query matches luceneQVal)
+    //(query matches valWithInterp) && !(query matches qvalWithInterp) ||
+    (query matches luceneVal)     && !(query matches luceneQVal)     ||
+    (query matches quoteVal)      ||  (query matches whereWithString)
   }
 
   def logResults(line: String, lineIndex: Int): Boolean = {
     val sus = isSuspicious(line)
     if (sus) {
-      println(s"${Console.RED}Suspicious pattern was found on line $lineIndex.")
+      println(s"${Console.RED}Suspicious pattern was found on line ${lineIndex-1}.")
       println(s"${Console.YELLOW + line.substring(0, Math.min(line.length, 150))}...${Console.RESET}")
     }
     sus

@@ -22,8 +22,8 @@ object ImgToAscii {
   final case object HtmlT  extends PrintType
   final case object PlainT extends PrintType
 
-  val printType  : PrintType = EmojiT
-
+  val printType  : PrintType = PlainT
+  val useChar = true
 
   lazy val _8bit      : Boolean   = printType match {
     case PlainT  => checkFor8bit()
@@ -345,6 +345,26 @@ object ImgToAscii {
     }
   }
 
+  object Characters {
+    import Xterm._
+    val inverse     = false
+    val baseRamp    = "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\\|()1{}[]?-_+~<>i!lI;:,\"^`'. "
+    val ramp:String = if(inverse) baseRamp else baseRamp.reverse
+
+    case class Character(char: Char, density: Int)
+
+    lazy val chars: List[Character] = ramp.foldLeft[List[Character]](List.empty[Character]) {
+      (x, y) => x.::(Character(y, 255 - x.length * 255 / ramp.length))
+    }
+
+    def closestChar(rgb: RGB): Char = {
+      val gray = (rgb.r + rgb.g + rgb.b) / 3
+      val distTable = chars.map(c => (c.char, if(c.density == gray) 0 else if(c.density > gray) c.density - gray else gray-c.density))
+      distTable.sortWith(_._2 < _._2).head._1
+    }
+
+  }
+
   object Emoji {
     import Xterm._
 
@@ -514,12 +534,14 @@ object ImgToAscii {
           case _      =>
             if(use256) {
               if (useChar)
-                print"${COLOR_256(Xterm.rgbToXterm(r,g,b))}$char"
+                //print"${COLOR_256(Xterm.rgbToXterm(r,g,b))}$char"
+                print"${COLOR_256(Xterm.rgbToXterm(r,g,b))}${Characters.closestChar(Xterm.RGB(r,g,b))}"
               else
                 print"${COLOR_256_B(Xterm.rgbToXterm(r,g,b))} "
             } else {
               if (useChar)
-                print"${COLOR(r, g, b)}$char"
+                //print"${COLOR(r, g, b)}$char"
+                print"${COLOR(r, g, b)}${Characters.closestChar(Xterm.RGB(r,g,b))}"
               else
                 print"${COLOR_B(r, g, b)} "
             }
@@ -532,7 +554,7 @@ object ImgToAscii {
   def main(args: Array[String]): Unit = {
     val myWidth : Int     = testWidth()
     val imgPath : String  = StdIn.readLine("Paste an image file path:")
-    printImg(imgPath, myWidth, printT = printType, use256 = _8bit)
+    printImg(imgPath, myWidth, useChar = useChar, printT = printType, use256 = _8bit)
   }
 
 
