@@ -3,9 +3,10 @@ import scala.Console.RESET
 package object imagePrinter {
 
   sealed trait PrintType
-  final case object EmojiT extends PrintType
-  final case object HtmlT  extends PrintType
-  final case object PlainT extends PrintType
+  final case object EmojiCT extends PrintType
+  final case object EmojiT  extends PrintType
+  final case object HtmlT   extends PrintType
+  final case object PlainT  extends PrintType
 
   /**String interpolators for quick and easy printing with clean styles
     */

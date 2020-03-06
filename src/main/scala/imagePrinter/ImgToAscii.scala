@@ -16,9 +16,11 @@ object ImgToAscii {
   val lightOnDark   :   Boolean       = StdIn.readLine("Are you using a console with light text on a dark background? y/n") == "y"
   val printType     :   PrintType     = StdIn.readLine(
     """Pick a type to print in:
+      |  [0] EmojiCT
       |  [1] EmojiT
       |  [2] HtmlT
       |  [3] PlainT""".stripMargin) match {
+    case "0" => EmojiCT
     case "1" => EmojiT
     case "2" => HtmlT
     case "3" => PlainT
@@ -31,9 +33,10 @@ object ImgToAscii {
   }
   //determines how squished or streched the image looks. 0.5 for mac terminal, 0.3 for intellij terminal
   val heightMult    :   Float         = printType match {
-    case EmojiT  => 0.75f
-    case HtmlT   => 0.3f
-    case _       => if(_8bit) 0.5f else 0.3f
+    case EmojiCT  => 0.75f
+    case EmojiT   => 0.75f
+    case HtmlT    => 0.3f
+    case _        => if(_8bit) 0.5f else 0.3f
   }
 
   /**Query the user for the desired image width.
@@ -46,6 +49,7 @@ object ImgToAscii {
       for(i<-0 to width) {
         val shade = math.min(i + min, 255)
         printType match {
+          case EmojiCT => print"${EmojiC.rgbToEmoji(shade,shade,shade)}"
           case EmojiT => print"${Emoji.emojiRGBs(Emoji.rgbToEmoji(shade,shade,shade)).emoji}"
           case _ =>
             if(_8bit) print"${COLOR_256_B(Xterm.rgbToXterm(shade,shade,shade))} "
@@ -135,6 +139,7 @@ object ImgToAscii {
         val b     = col.getBlue
 
         printT match {
+          case EmojiCT => print"${EmojiC.rgbToEmoji(r,g,b)}"
           case EmojiT => print"${Emoji.emojiRGBs(Emoji.rgbToEmoji(r,g,b)).emoji}"
           case _      =>
             if(use256) {

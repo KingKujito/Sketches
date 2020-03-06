@@ -17,7 +17,7 @@ import scala.util.Try
 
 //TODO use shortcodes: https://github.com/lightbend/lightbend-emoji
 object EmojiColors {
-  val driver     : WebDriver                = new SafariDriver()
+  lazy val driver     : WebDriver                = new SafariDriver()
   val fileExt                               = ".csv"
   //The url hosting all emoji names, unicodes and images.
   val allEmojiPath                          = "https://unicode.org/emoji/charts/full-emoji-list.html"
