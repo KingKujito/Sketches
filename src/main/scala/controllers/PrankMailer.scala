@@ -3,7 +3,7 @@ package controllers
 import utils.Mail
 
 import scala.concurrent.duration._
-import utils.ImgToAscii._
+import imagePrinter.ImgToAscii._
 
 import scala.util.Random
 

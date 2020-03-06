@@ -1,8 +1,8 @@
 package controllers
 
+import imagePrinter.ImgToAscii
 import mapScroller.MapApp
 import mover.MoverApp
-import utils.ImgToAscii
 import utils.Mail
 
 import scala.io.StdIn

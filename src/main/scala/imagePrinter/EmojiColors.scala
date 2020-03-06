@@ -1,19 +1,18 @@
-package SingularSketches
+package imagePrinter
 
-import java.awt.{Color, Image}
 import java.awt.image.BufferedImage
+import java.awt.{Color, Image}
 import java.io.{File, FileWriter}
 import java.net.URL
 import java.nio.ByteBuffer
 import java.nio.charset.Charset
 
 import javax.imageio.ImageIO
-import org.openqa.selenium.{By, WebDriver, WebElement}
 import org.openqa.selenium.safari.SafariDriver
-import utils.ImgToAscii
+import org.openqa.selenium.{By, WebDriver, WebElement}
 
 import scala.collection.mutable.ListBuffer
-import scala.io.Source
+import scala.io.{Source, StdIn}
 import scala.util.Try
 
 //TODO use shortcodes: https://github.com/lightbend/lightbend-emoji
@@ -94,7 +93,7 @@ object EmojiColors {
     * Use this if you want to test the accuracy of readGeneralColor().
     */
   def getGeneralColorBigImg(img : BufferedImage): Color = {
-    ImgToAscii.imgToAscii(img, printT = ImgToAscii.PlainT)
+    ImgToAscii.imgToAscii(img, printT = PlainT)
 
     var r,g,b = 0
     val xy = for {
@@ -132,7 +131,7 @@ object EmojiColors {
   def addEmojiColorToFile(emojiColor: EmojiColor, emojiType: EmojiType, ext: String = fileExt): Unit = {
     if(emojiFiles(emojiType).exists && emojiFiles(emojiType).isFile) {
       print(".")
-      val lines = Source.fromFile(emojiFiles(emojiType)).getLines.mkString("\n")
+      val lines = Source.fromFile(emojiFiles(emojiType)).getLines.mkString("\n") //fixme
       val fw = new FileWriter(emojiFiles(emojiType).getPath)
       fw.write(lines+"\n"+emojiColor.toCSV)
       fw.close()
@@ -145,7 +144,7 @@ object EmojiColors {
   def readFromFile(path: String) : List[EmojiColor] = {
     var i = 0
     val buff = ListBuffer.empty[Option[EmojiColor]]
-    for (line <- Source.fromFile(path).getLines) {
+    for (line <- Source.fromFile(path).getLines) { //fixme
       if(i!=0)
         buff += Try( EmojiColor.fromCSV(line) ).toOption
       i += 1
@@ -186,8 +185,10 @@ object EmojiColors {
   }
 
   def main(args: Array[String]): Unit = {
-    generateDir()
-    generateFiles()
+    if(StdIn.readLine("Want to create new image files? y/n").trim.toLowerCase == "y") {
+      generateDir()
+      generateFiles()
+    }
     writeAllEmoji(Apple)
 
     //println(UTF32ToEmoji(completeUTF32(codeToChar("U+1F600"))))
@@ -322,6 +323,7 @@ object EmojiColors {
   def base64ToImage(sourceData: String, name: String) : String = {
     // Needed Imports
     import java.io.ByteArrayInputStream
+
     import sun.misc.BASE64Decoder
 
     // tokenize the data
